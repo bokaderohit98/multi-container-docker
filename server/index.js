@@ -20,7 +20,7 @@ const pgClient = new Pool({
     password: keys.pgPassword,
     port: keys.pgPort
 });
-pgClient.on('error', () => console.log('Lost PG connection'));
+pgClient.on('error', (error) => console.log(error));
 
 pgClient
     .query('CREATE TABLE IF NOT EXISTS values (number INT)')
@@ -33,6 +33,8 @@ const redisClient = redis.createClient({
     port: keys.redisPort,
     retry_strategy: () => 1000
 });
+redisClient.on('error', (error) => console.log(error))
+
 
 const redisPublisher = redisClient.duplicate();
 
@@ -44,7 +46,7 @@ app.get('/', (req, res) => {
 
 app.get('/values/all', async (req, res) => {
     const values = await pgClient.query('SELECT * FROM values');
-    res.send(values.row);
+    res.send(values.rows);
 });
 
 app.get('/values/current', async (req, res) => {

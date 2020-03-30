@@ -9,7 +9,6 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-console.log(keys);
 
 // Postgres client setup
 const { Pool } = require('pg');
@@ -20,7 +19,7 @@ const pgClient = new Pool({
     password: keys.pgPassword,
     port: keys.pgPort
 });
-pgClient.on('error', (error) => console.log(error));
+pgClient.on('error', function(error) {console.log(error)});
 
 pgClient
     .query('CREATE TABLE IF NOT EXISTS values (number INT)')
@@ -33,7 +32,7 @@ const redisClient = redis.createClient({
     port: keys.redisPort,
     retry_strategy: () => 1000
 });
-redisClient.on('error', (error) => console.log(error))
+redisClient.on('error', function(error) {console.log(error)});
 
 
 const redisPublisher = redisClient.duplicate();
@@ -49,7 +48,7 @@ app.get('/values/all', async (req, res) => {
     res.send(values.rows);
 });
 
-app.get('/values/current', async (req, res) => {
+app.get('/values/current', (req, res) => {
     redisClient.hgetall('values', (err, values) => {
         res.send(values);
     });

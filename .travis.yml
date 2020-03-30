@@ -26,11 +26,11 @@ after_success:
 
 deploy:
     provider: elasticbeanstalk
-    region: "us-east-2"
-    app: "multi-docker"
-    env: "MultiDocker-env"
-    bucket_name: "elasticbeanstalk-us-east-2-495717134924"
-    bucket_path: "multi-docker"
+    region: "ap-south-1"
+    app: "fibonacci"
+    env: "Fibonacci-env"
+    bucket_name: "elasticbeanstalk-ap-south-1-495717134924"
+    bucket_path: "fibonacci"
     on:
         branch: master
     access_key_id: $AWS_ACCESS_KEY

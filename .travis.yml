@@ -9,3 +9,17 @@ before_install:
 
 script:
     - docker run -e CI=true dev/client npm run test -- --coverage
+
+after_success:
+    # Build docker images
+    - docker build -t bokaderohit98/multi-container-client ./client
+    - docker build -t bokaderohit98/multi-container-server ./server
+    - docker build -t bokaderohit98/multi-container-worker ./worker
+    - docker build -t bokaderohit98/multi-container-nginx ./nginx
+    # Log in to the docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # Push images to dockerhub
+    - docker push bokaderohit98/multi-container-client
+    - docker push bokaderohit98/multi-container-server
+    - docker push bokaderohit98/multi-container-worker
+    - docker push bokaderohit98/multi-container-nginx
